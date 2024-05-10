@@ -715,16 +715,16 @@ def test__JsonConverter__using_classmethods_on_plain_class() -> None:
     assert mapper.deserialize("MyCls", MyCls) == MyCls()
 
 
-T = t.TypeVar("T")
+UnboundGeneric = t.TypeVar("UnboundGeneric")
 
 
 @dataclasses.dataclass
-class GenericClass(t.Generic[T]):
+class GenericClass(t.Generic[UnboundGeneric]):
     a_field: int
 
 
 @dataclasses.dataclass
-class InheritGeneric(GenericClass):
+class InheritGeneric(GenericClass):  # type: ignore[type-arg]
     b_field: str
 
 

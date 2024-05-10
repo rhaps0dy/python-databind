@@ -458,16 +458,16 @@ def test_parse_dataclass_with_forward_ref() -> None:
     )
 
 
-T = t.TypeVar("T")
+UnboundGeneric = t.TypeVar("UnboundGeneric")
 
 
 @dataclasses.dataclass
-class GenericClass(t.Generic[T]):
+class GenericClass(t.Generic[UnboundGeneric]):
     a_field: int
 
 
 @dataclasses.dataclass
-class InheritGeneric(GenericClass):
+class InheritGeneric(GenericClass):  # type: ignore[type-arg]
     b_field: str
 
 
