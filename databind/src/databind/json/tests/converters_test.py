@@ -3,6 +3,7 @@ import datetime
 import decimal
 import enum
 import sys
+from types import NoneType
 import typing as t
 import uuid
 from collections import namedtuple
@@ -77,6 +78,10 @@ def test_plain_datatype_converter(direction: Direction) -> None:
         assert mapper.convert(direction, "42", int) == 42
         with pytest.raises(ConversionError):
             mapper.convert(direction, "foobar", int)
+
+    # None should behave the same in both cases
+    assert mapper.convert(direction, None, NoneType) is None
+    assert mapper.convert(direction, None, None) is None
 
 
 @pytest.mark.parametrize("direction", (Direction.SERIALIZE, Direction.DESERIALIZE))
