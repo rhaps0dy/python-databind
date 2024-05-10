@@ -457,7 +457,9 @@ def test_parse_dataclass_with_forward_ref() -> None:
         ClassWithForwardRef,
     )
 
+
 T = t.TypeVar("T")
+
 
 @dataclasses.dataclass
 class GenericClass(t.Generic[T]):
