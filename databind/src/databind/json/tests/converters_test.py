@@ -713,3 +713,25 @@ def test__JsonConverter__using_classmethods_on_plain_class() -> None:
     mapper = make_mapper([JsonConverterSupport()])
     assert mapper.serialize(MyCls(), MyCls) == "MyCls"
     assert mapper.deserialize("MyCls", MyCls) == MyCls()
+
+
+T = t.TypeVar("T")
+
+
+@dataclasses.dataclass
+class GenericClass(t.Generic[T]):
+    a_field: int
+
+
+@dataclasses.dataclass
+class InheritGeneric(GenericClass):
+    b_field: str
+
+
+def test_serialize_generic_dataclass() -> None:
+    """Regression test for #66: dataclasses inheriting from Generic with an uninstantiated TypeVar don't get their
+    parents' fields.
+    """
+    obj = InheritGeneric(2, "hi")
+    mapper = make_mapper([SchemaConverter(), PlainDatatypeConverter()])
+    assert mapper.serialize(obj, InheritGeneric) == {"a_field": obj.a_field, "b_field": obj.b_field}

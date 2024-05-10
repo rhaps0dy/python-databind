@@ -456,3 +456,25 @@ def test_parse_dataclass_with_forward_ref() -> None:
         ClassWithForwardRef,
         ClassWithForwardRef,
     )
+
+T = t.TypeVar("T")
+
+@dataclasses.dataclass
+class GenericClass(t.Generic[T]):
+    a_field: int
+
+
+@dataclasses.dataclass
+class InheritGeneric(GenericClass):
+    b_field: str
+
+
+def test_schema_generic_dataclass() -> None:
+    """Regression test for #66: dataclasses inheriting from Generic with an uninstantiated TypeVar don't get their
+    parents' fields.
+    """
+    assert convert_dataclass_to_schema(InheritGeneric) == Schema(
+        {"a_field": Field(TypeHint(int), True), "b_field": Field(TypeHint(str), True)},
+        InheritGeneric,
+        InheritGeneric,
+    )
