@@ -728,10 +728,16 @@ class InheritGeneric(GenericClass):  # type: ignore[type-arg]
     b_field: str
 
 
-def test_serialize_generic_dataclass() -> None:
+@pytest.mark.parametrize("direction", (Direction.SERIALIZE, Direction.DESERIALIZE))
+def test_convert_generic_dataclass(direction: Direction) -> None:
     """Regression test for #66: dataclasses inheriting from Generic with an uninstantiated TypeVar don't get their
     parents' fields.
     """
-    obj = InheritGeneric(2, "hi")
     mapper = make_mapper([SchemaConverter(), PlainDatatypeConverter()])
-    assert mapper.serialize(obj, InheritGeneric) == {"a_field": obj.a_field, "b_field": obj.b_field}
+
+    if direction == Direction.SERIALIZE:
+        obj = InheritGeneric(2, "hi")
+        assert mapper.convert(direction, obj, InheritGeneric) == {"a_field": obj.a_field, "b_field": obj.b_field}
+    else:
+        obj = InheritGeneric(4, "something")
+        assert mapper.convert(direction, {"a_field": obj.a_field, "b_field": obj.b_field}, InheritGeneric) == obj
