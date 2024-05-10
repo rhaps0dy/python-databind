@@ -713,3 +713,16 @@ def test__JsonConverter__using_classmethods_on_plain_class() -> None:
     mapper = make_mapper([JsonConverterSupport()])
     assert mapper.serialize(MyCls(), MyCls) == "MyCls"
     assert mapper.deserialize("MyCls", MyCls) == MyCls()
+
+
+def test_union_literal():
+    mapper = make_mapper([UnionConverter(), PlainDatatypeConverter()])
+
+    IntType = int | t.Literal["hi", "bye"]
+    StrType = str | t.Literal["hi", "bye"]
+
+    assert mapper.serialize("hi", IntType) == "hi"
+    assert mapper.serialize(2, IntType) == 2
+
+    assert mapper.serialize("bye", StrType) == "bye"
+    assert mapper.serialize("other", StrType) == "other"
