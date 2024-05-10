@@ -719,7 +719,7 @@ UnboundTypeVar = t.TypeVar("UnboundTypeVar")
 
 
 @dataclasses.dataclass
-class GenericClass(t.Generic[UnboundGeneric]):
+class GenericClass(t.Generic[UnboundTypeVar]):
     a_field: int
 
 
