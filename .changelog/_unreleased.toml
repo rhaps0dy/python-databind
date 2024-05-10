@@ -1,0 +1,5 @@
+[[entries]]
+id = "6d0f41f2-f7f9-4808-af65-196a7a909b4f"
+type = "fix"
+description = "Fix #47: Union with Literal in them can now de/serialize"
+author = "@rhaps0dy"
