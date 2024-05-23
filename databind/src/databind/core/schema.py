@@ -245,7 +245,7 @@ def convert_dataclass_to_schema(dataclass_type: t.Union[type, GenericAlias, Clas
             pass
 
         # Continue with the base classes.
-        for base in hint.bases or hint.type.__bases__:
+        for base in (*hint.bases, *hint.type.__bases__):
             base_hint = TypeHint(base, source=hint.type).evaluate().parameterize(parameter_map)
             assert isinstance(base_hint, ClassTypeHint), f"nani? {base_hint}"
             if dataclasses.is_dataclass(base_hint.type):
